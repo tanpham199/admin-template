@@ -5,7 +5,11 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,scss,md,json}",
     "lint": "next lint",
+    "lint:js": "eslint src/**/*.{js,jsx,ts,tsx}",
+    "lint-staged": "lint-staged",
+    "prepare": "husky install",
     "start": "next start"
   },
   "dependencies": {
@@ -30,6 +34,8 @@
     "autoprefixer": "10.4.14",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.0",
     "postcss": "8.4.27",
     "prettier": "^3.0.1",
     "sass": "^1.65.1",
