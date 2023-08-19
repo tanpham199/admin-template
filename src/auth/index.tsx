@@ -13,44 +13,37 @@ const PUBLIC_PATHS = [PagePath.Login];
 
 const Auth = ({ children }: PropsWithChildren) => {
   const router = useRouter();
-  const { user, login } = useUserStore();
-  // const { modal } = App.useApp();
+  const { accessToken } = useUserStore();
+  const { modal } = App.useApp();
 
   const isInPublicPath = PUBLIC_PATHS.some((path) => router.pathname.includes(path));
 
   useEffect(() => {
-    if (isInPublicPath || user) {
+    if (isInPublicPath) {
       return;
     }
-    router.push(PagePath.Login);
-    // console.log(user);
-    // httpRequest
-    //   .get('/admin/v1/me')
-    //   .then((response) => {
-    //     // setUserInfo(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('getUserInfo:', error);
-    //     if (isNotLoginError(error)) {
-    //       modal.error({
-    //         title: UNEXPECTED_ERROR_TEXT,
-    //         content: 'Cannot connect to server',
-    //         okButtonProps: { danger: true },
-    //         okText: 'Retry',
-    //         onOk: () => {
-    //           window.location.reload();
-    //         },
-    //         centered: true,
-    //       });
-    //     }
-    //   });
+    httpRequest.get('/admin/v1/me').catch((error) => {
+      console.error('getUserInfo:', error);
+      if (isNotLoginError(error)) {
+        modal.error({
+          title: UNEXPECTED_ERROR_TEXT,
+          content: 'Cannot connect to server',
+          okButtonProps: { danger: true },
+          okText: 'Retry',
+          onOk: () => {
+            window.location.reload();
+          },
+          centered: true,
+        });
+      }
+    });
   }, [isInPublicPath]);
 
   if (isInPublicPath) {
     return children;
   }
 
-  if (user == null) {
+  if (accessToken == null) {
     return (
       <div className={styles.wrapper}>
         <Spin size="large" />

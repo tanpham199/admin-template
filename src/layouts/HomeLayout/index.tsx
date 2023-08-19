@@ -48,7 +48,7 @@ const HomeLayout = ({ children }: PropsWithChildren) => {
       <Header className={styles.header} style={{ background: colorBgContainer }}>
         <div className={classNames('center-row-between', styles.logo)}>
           <Link href={PagePath.Home}>
-            <Image src={APP_LOGO} alt="Logo" height={48} />
+            <Image src={APP_LOGO} alt="Logo" height={48} priority />
           </Link>
           <Button
             type="text"

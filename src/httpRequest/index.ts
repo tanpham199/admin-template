@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import useUserStore from '@/stores/user';
 import Router from 'next/router';
 import { PagePath } from '@/enums';
@@ -6,22 +6,33 @@ import { PagePath } from '@/enums';
 const API_ROOT = process.env.NEXT_PUBLIC_API;
 
 const httpRequest = axios.create({
-  withCredentials: true,
   baseURL: API_ROOT,
-  headers: {
-    Authorization: useUserStore.getState().user?.accessToken,
-  },
+});
+
+httpRequest.interceptors.request.use((config) => {
+  const { accessToken } = useUserStore.getState();
+  config.headers.Authorization = accessToken;
+  return config;
 });
 
 httpRequest.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
+  (response) => {
+    return response.data;
   },
-  (error: AxiosError<{ message: string }>) => {
+  async (error: AxiosError) => {
     if (error.response?.status === HttpStatusCode.Unauthorized) {
-      useUserStore.getState().logout();
-      localStorage.removeItem('user');
-      Router.push(PagePath.Login);
+      const { accessToken, logout } = useUserStore.getState();
+      const originalRequest = error.config as typeof error.config & { _retry: boolean };
+      const shouldRetry = accessToken && originalRequest && !originalRequest._retry;
+      if (shouldRetry) {
+        originalRequest._retry = true;
+        await useUserStore.getState().refreshToken();
+        return httpRequest(originalRequest);
+      } else {
+        logout();
+        localStorage.removeItem('user');
+        Router.push(PagePath.Login);
+      }
     }
     return Promise.reject(error);
   }
