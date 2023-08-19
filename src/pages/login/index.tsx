@@ -1,8 +1,8 @@
-import Login from '@/components/pages/Login';
+import Auth from '@/components/pages/Auth';
 import EmptyLayout from '@/layouts/EmptyLayout';
 
 const LoginPage = () => {
-  return <Login />;
+  return <Auth />;
 };
 
 LoginPage.Layout = EmptyLayout;

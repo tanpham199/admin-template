@@ -17,6 +17,10 @@
     .ant-form-item-label {
       padding: 0;
     }
+
+    .ant-divider:last-of-type {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -27,8 +31,4 @@
     width: auto;
     height: 80px;
   }
-}
-
-.mb0 {
-  margin-bottom: 0 !important;
 }
