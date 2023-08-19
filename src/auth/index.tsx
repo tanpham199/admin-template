@@ -9,7 +9,7 @@ import { PagePath } from '@/enums';
 import { isNotLoginError } from '@/utils';
 import { UNEXPECTED_ERROR_TEXT } from '@/constants';
 
-const PUBLIC_PATHS = [PagePath.Login];
+const PUBLIC_PATHS = [PagePath.Login, PagePath.Register, PagePath.Forgot];
 
 const Auth = ({ children }: PropsWithChildren) => {
   const router = useRouter();

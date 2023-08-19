@@ -3,6 +3,8 @@ import useUserStore from '@/stores/user';
 import Router from 'next/router';
 import { PagePath } from '@/enums';
 
+export type HttpError = AxiosError<{ message: string; data: null }>;
+
 const API_ROOT = process.env.NEXT_PUBLIC_API;
 
 const httpRequest = axios.create({
@@ -19,7 +21,7 @@ httpRequest.interceptors.response.use(
   (response) => {
     return response.data;
   },
-  async (error: AxiosError) => {
+  async (error: HttpError) => {
     if (error.response?.status === HttpStatusCode.Unauthorized) {
       const { accessToken, logout } = useUserStore.getState();
       const originalRequest = error.config as typeof error.config & { _retry: boolean };
