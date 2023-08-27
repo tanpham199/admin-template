@@ -28,7 +28,7 @@ const Auth = ({ children }: PropsWithChildren) => {
       router.push(PagePath.Login);
       return;
     }
-    httpRequest.get('/admin/v1/me').catch((error) => {
+    httpRequest.get('/verify-token').catch((error) => {
       console.error('getUserInfo:', error);
       if (isNotLoginError(error)) {
         modal.error({

@@ -11,12 +11,12 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { FirebaseError } from 'firebase/app';
-import httpRequest, { HttpError } from '@/httpRequest';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/firebase';
+import { getEmailRules, getPasswordRules } from '@/utils/formRules';
 
 type FieldType = {
-  fullName?: string;
+  displayName?: string;
   email: string;
   password?: string;
   confirmPassword?: string;
@@ -61,28 +61,38 @@ const Auth = ({ type = 'login' }: LoginProps) => {
     }
   };
 
-  const onRegister = async ({ fullName, email, password = '' }: FieldType) => {
+  const onRegister = async ({ displayName, email, password = '' }: FieldType) => {
     setIsSubmitting(true);
     try {
-      await httpRequest.post('/agent/v1/me/register', { fullName, email, password });
+      const userInfo = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userInfo.user, { displayName });
       await login({ email, password });
     } catch (error) {
-      message.error((error as HttpError).response?.data.message);
+      const { code } = error as FirebaseError;
+      if (code?.includes('auth/invalid-email')) {
+        message.error('Your email is invalid.');
+      } else if (code?.includes('auth/weak-password')) {
+        message.error('Your password is too weak.');
+      } else {
+        message.error(UNEXPECTED_ERROR_TEXT);
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const onForgot = async ({ email }: FieldType) => {
+    setIsSubmitting(true);
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error) {
       if ((error as FirebaseError).code?.includes('auth/')) {
-        message.error('Invalid email.');
+        message.error('Your email is invalid.');
       } else {
         message.error(UNEXPECTED_ERROR_TEXT);
       }
     } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -124,21 +134,17 @@ const Auth = ({ type = 'login' }: LoginProps) => {
         {isRegisterForm && (
           <Item
             label="Full Name"
-            name="fullName"
-            rules={[{ required: isRegisterForm, message: 'Please input your full name!' }]}
+            name="displayName"
+            rules={[{ required: isRegisterForm, message: 'Please input your full name.' }]}
           >
             <Input />
           </Item>
         )}
-        <Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+        <Item label="Email" name="email" rules={getEmailRules()}>
           <Input />
         </Item>
         {!isForgotForm && (
-          <Item
-            label="Password"
-            name="password"
-            rules={[{ required: !isForgotForm, message: 'Please input your password!' }]}
-          >
+          <Item label="Password" name="password" rules={getPasswordRules(!isForgotForm)}>
             <Input.Password />
           </Item>
         )}
