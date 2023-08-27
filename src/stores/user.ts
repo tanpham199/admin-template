@@ -1,15 +1,15 @@
 import { auth } from '@/firebase';
-import httpRequest from '@/httpRequest';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface UserInfo {
+  uid: string;
   email: string;
-  fullName: string;
+  displayName: string | null;
 }
 
-interface SetUserInfoPArams {
+interface LoginParams {
   email: string;
   password: string;
 }
@@ -17,7 +17,7 @@ interface SetUserInfoPArams {
 interface UserState {
   user: UserInfo | null;
   accessToken?: string;
-  login: (params: SetUserInfoPArams) => Promise<void>;
+  login: (params: LoginParams) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
 }
@@ -27,11 +27,12 @@ const useUserStore = create<UserState>()(
     (set, get) => ({
       user: null,
       login: async ({ email, password }) => {
-        const userInfo = await signInWithEmailAndPassword(auth, email, password);
-        const accessToken = await userInfo.user.getIdToken();
-        set((state) => ({ ...state, accessToken }));
-        const { data } = await httpRequest.get<UserInfo>('/admin/v1/me');
-        set((state) => ({ ...state, user: { email, fullName: data.fullName } }));
+        const { user } = await signInWithEmailAndPassword(auth, email, password);
+        const accessToken = await user.getIdToken();
+        set(() => ({
+          accessToken,
+          user: { email, displayName: user.displayName, uid: user.uid },
+        }));
       },
       logout: () => {
         set({

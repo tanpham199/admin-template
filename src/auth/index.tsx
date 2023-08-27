@@ -13,13 +13,19 @@ const PUBLIC_PATHS = [PagePath.Login, PagePath.Register, PagePath.Forgot];
 
 const Auth = ({ children }: PropsWithChildren) => {
   const router = useRouter();
-  const { accessToken } = useUserStore();
+  const { accessToken, logout } = useUserStore();
   const { modal } = App.useApp();
 
   const isInPublicPath = PUBLIC_PATHS.some((path) => router.pathname.includes(path));
 
   useEffect(() => {
     if (isInPublicPath) {
+      return;
+    }
+    if (!accessToken) {
+      logout();
+      localStorage.removeItem('user');
+      router.push(PagePath.Login);
       return;
     }
     httpRequest.get('/admin/v1/me').catch((error) => {
