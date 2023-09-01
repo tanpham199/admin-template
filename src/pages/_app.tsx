@@ -1,4 +1,5 @@
 import Auth from '@/auth';
+import { APP_THEME } from '@/constants';
 import HomeLayout from '@/layouts/HomeLayout';
 import '@/styles/globals.scss';
 import { ConfigProvider, App as AntApp } from 'antd';
@@ -19,7 +20,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   const Layout = Component.Layout ?? HomeLayout;
 
   return (
-    <ConfigProvider>
+    <ConfigProvider theme={APP_THEME}>
       <AntApp>
         <Auth>
           <Layout>
