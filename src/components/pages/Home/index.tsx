@@ -86,11 +86,7 @@ const Home = () => {
         dataSource={DUMMY_TOP_AGENTS}
         renderItem={({ name, sold }, i) => (
           <Item extra={<Text strong>#{i + 1}</Text>}>
-            <Item.Meta
-              title={name}
-              description={`${sold} sold`}
-              avatar={<Avatar src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`} />}
-            />
+            <Item.Meta title={name} description={`${sold} sold`} avatar={<Avatar size="large" src="/favicon.ico" />} />
           </Item>
         )}
       />
