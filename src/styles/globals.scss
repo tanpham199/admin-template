@@ -7,6 +7,11 @@ body {
   min-height: 100vh;
 }
 
+img {
+  display: block;
+  object-fit: cover;
+}
+
 .center {
   display: flex;
   justify-content: center;

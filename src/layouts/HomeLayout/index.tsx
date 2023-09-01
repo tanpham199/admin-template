@@ -45,44 +45,42 @@ const HomeLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <Layout className={styles.layout}>
-      <Header className={styles.header} style={{ background: colorBgContainer }}>
-        <div className={classNames('center-row-between', styles.logo)}>
-          <Link href={PagePath.Home}>
-            <Image src={APP_LOGO} alt="Logo" height={48} priority />
-          </Link>
+      <Sider trigger={null} collapsible collapsed={collapsed} className={collapsed ? styles.siderCollapsed : undefined}>
+        <Link href={PagePath.Home} className={classNames(styles.logo, 'center')}>
+          <Image src={APP_LOGO} alt="Logo" priority />
+        </Link>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={MENU_ITEMS} />
+      </Sider>
+      <Layout>
+        <Header className={styles.header} style={{ background: colorBgContainer }}>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             className={styles.collapse}
           />
-        </div>
-        <Dropdown
-          trigger={['click']}
-          menu={{
-            items: [
-              {
-                key: '1',
-                label: <Link href={PagePath.Home}>Settings</Link>,
-              },
-              {
-                key: '2',
-                danger: true,
-                label: <Link href={PagePath.Login}>Logout</Link>,
-                onClick: () => {
-                  logout();
+          <Dropdown
+            trigger={['click']}
+            menu={{
+              items: [
+                {
+                  key: '1',
+                  label: <Link href={PagePath.Home}>Settings</Link>,
                 },
-              },
-            ],
-          }}
-        >
-          <Avatar src="/favicon.ico" icon={<UserOutlined />} className={classNames(styles.avatar, 'center')} />
-        </Dropdown>
-      </Header>
-      <Layout hasSider>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={MENU_ITEMS} />
-        </Sider>
+                {
+                  key: '2',
+                  danger: true,
+                  label: <Link href={PagePath.Login}>Logout</Link>,
+                  onClick: () => {
+                    logout();
+                  },
+                },
+              ],
+            }}
+          >
+            <Avatar src="/favicon.ico" icon={<UserOutlined />} className={classNames(styles.avatar, 'center')} />
+          </Dropdown>
+        </Header>
         <Content
           className={styles.content}
           style={{
