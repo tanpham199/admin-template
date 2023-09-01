@@ -28,6 +28,11 @@ $sider-desktop-width: 80px;
   }
 }
 
+.menu {
+  position: sticky;
+  top: 0;
+}
+
 .logo {
   display: block;
   margin: 8px;
