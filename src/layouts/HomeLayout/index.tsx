@@ -10,7 +10,7 @@ import {
 import { Layout, Menu, Button, theme, Avatar, Dropdown } from 'antd';
 import styles from './HomeLayout.module.scss';
 import Image from 'next/image';
-import { APP_LOGO } from '@/constants';
+import { APP_LOGO, MOBILE_BREAKPOINT } from '@/constants';
 import Link from 'next/link';
 import { PagePath } from '@/enums';
 import classNames from 'classnames';
@@ -42,7 +42,7 @@ const MENU_ITEMS: ItemType<MenuItemType>[] = [
 ];
 
 const HomeLayout = ({ children }: PropsWithChildren) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   const {
     token: { colorBgContainer },
