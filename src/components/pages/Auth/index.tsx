@@ -128,9 +128,7 @@ const Auth = ({ type = 'login' }: LoginProps) => {
         size="large"
         autoComplete={type !== 'login' ? 'off' : undefined}
       >
-        <div className={styles.logo}>
-          <Image src={APP_LOGO} alt="Logo" priority />
-        </div>
+        <Image className={styles.logo} src={APP_LOGO} alt="Logo" priority />
         {isRegisterForm && (
           <Item
             label="Full Name"

@@ -24,7 +24,6 @@ const Auth = ({ children }: PropsWithChildren) => {
     }
     if (!accessToken) {
       logout();
-      localStorage.removeItem('user');
       router.push(PagePath.Login);
       return;
     }

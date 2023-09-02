@@ -32,7 +32,6 @@ httpRequest.interceptors.response.use(
         return httpRequest(originalRequest);
       } else {
         logout();
-        localStorage.removeItem('user');
         Router.push(PagePath.Login);
       }
     }
