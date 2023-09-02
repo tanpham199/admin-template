@@ -1,12 +1,5 @@
 import React, { PropsWithChildren, useState } from 'react';
-import {
-  HomeOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+import { FormOutlined, HomeOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, Avatar, Dropdown } from 'antd';
 import styles from './HomeLayout.module.scss';
 import Image from 'next/image';
@@ -15,39 +8,33 @@ import Link from 'next/link';
 import { PagePath } from '@/enums';
 import classNames from 'classnames';
 import useUserStore from '@/stores/user';
-import { ItemType, MenuItemType } from 'antd/es/menu/hooks/useItems';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 
 const { Header, Sider, Content } = Layout;
 
-const MENU_ITEMS: ItemType<MenuItemType>[] = [
-  {
-    key: '1',
-    icon: <HomeOutlined />,
-    label: 'Dashboard',
-    onClick: () => Router.push(PagePath.Home),
-  },
-  {
-    key: '2',
-    icon: <VideoCameraOutlined />,
-    label: 'nav 2',
-    onClick: () => Router.push(PagePath.Home),
-  },
-  {
-    key: '3',
-    icon: <UploadOutlined />,
-    label: 'nav 3',
-    onClick: () => Router.push(PagePath.Home),
-  },
-];
-
 const HomeLayout = ({ children }: PropsWithChildren) => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < MOBILE_BREAKPOINT);
+  const router = useRouter();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const { logout } = useUserStore();
+
+  const menuItems = [
+    {
+      key: PagePath.Home,
+      icon: <HomeOutlined />,
+      label: 'Dashboard',
+      onClick: () => router.push(PagePath.Home),
+    },
+    {
+      key: PagePath.Forms,
+      icon: <FormOutlined />,
+      label: 'Forms',
+      onClick: () => router.push(PagePath.Forms),
+    },
+  ];
 
   return (
     <Layout className={styles.layout}>
@@ -55,7 +42,13 @@ const HomeLayout = ({ children }: PropsWithChildren) => {
         <Link href={PagePath.Home} className={classNames(styles.logo, 'center')}>
           <Image src={APP_LOGO} alt="Logo" priority />
         </Link>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={MENU_ITEMS} className={styles.menu} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[menuItems.find(({ key }) => router.pathname === key)?.key || PagePath.Home]}
+          items={menuItems}
+          className={styles.menu}
+        />
       </Sider>
       <Layout>
         <Header className={styles.header} style={{ background: colorBgContainer }}>

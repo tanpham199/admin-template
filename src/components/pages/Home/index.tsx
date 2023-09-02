@@ -66,9 +66,9 @@ const DUMMY_TOP_AGENTS = [
 
 const Home = () => {
   return (
-    <main>
-      <MaintenanceAlert className="mb-2" />
+    <>
       <Head pageTitle="Dashboard" />
+      <MaintenanceAlert className="mb-2" />
       <Title>Dashboard</Title>
       <Title level={2}>Overview</Title>
       <Row className="mb-4">
@@ -100,7 +100,7 @@ const Home = () => {
           </Item>
         )}
       />
-    </main>
+    </>
   );
 };
 

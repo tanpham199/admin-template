@@ -1,0 +1,8 @@
+.wrapper {
+  :global {
+    .ant-card {
+      max-width: 600px;
+      margin: auto;
+    }
+  }
+}
